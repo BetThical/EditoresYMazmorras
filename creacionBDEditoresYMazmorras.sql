@@ -197,7 +197,7 @@ ALTER SEQUENCE public.mazmorra_id_seq OWNED BY public.mazmorra.id;
 --
 
 CREATE TABLE public.usuario (
-    id uuid NOT NULL,
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
     nombre character varying(32) NOT NULL
 );
 
