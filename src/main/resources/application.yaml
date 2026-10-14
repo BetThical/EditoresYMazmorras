@@ -1,3 +1,15 @@
 spring:
   application:
     name: EditoresYMazmorras
+  datasource:
+    url: jdbc:postgresql://localhost:5432/editoresymazmorras
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_schema: public
+server:
+  port: 8080
