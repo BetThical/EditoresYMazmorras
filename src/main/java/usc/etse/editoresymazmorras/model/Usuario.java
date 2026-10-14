@@ -9,6 +9,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "usuario")
 public class Usuario {
+    // Usuario mínimo: solo identidad para auth por X-Usuario-Id.
 
     @Id
     private UUID id;

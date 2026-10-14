@@ -11,6 +11,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "mazmorra")
 public class Mazmorra {
+    // Cabecera de la mazmorra: el mapa vive en elementomazmorra/cofre.
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,12 +20,14 @@ public class Mazmorra {
     @Column(name = "nombre", nullable = false, length = 64)
     private String nombre;
 
+    // Contadores cacheados (la fuente de verdad es la tabla voto).
     @Column(name = "upvotes", nullable = false)
     private long upvotes = 0;
 
     @Column(name = "downvotes", nullable = false)
     private long downvotes = 0;
 
+    // Dueño: UUID suelto (sin @ManyToOne) para no acoplar el agregado.
     @Column(name = "creador", nullable = false)
     private UUID creador;
 
