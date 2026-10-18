@@ -26,8 +26,12 @@ DROP DATABASE IF EXISTS editoresymazmorras;
 -- TOC entry 5045 (class 1262 OID 16460)
 -- Name: editoresymazmorras; Type: DATABASE; Schema: -; Owner: postgres
 --
+-- NOTA: sin LOCALE, a propósito. El dump original traía LOCALE = 'Spanish_Spain.1252',
+-- que es un locale de Windows y falla en Linux ("invalid LC_COLLATE locale name").
+-- Heredando el locale del clúster, el script vale en Windows y en Linux.
+-- La collation por defecto será la del servidor donde se ejecute.
 
-CREATE DATABASE editoresymazmorras WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'Spanish_Spain.1252';
+CREATE DATABASE editoresymazmorras WITH TEMPLATE = template0 ENCODING = 'UTF8';
 
 
 ALTER DATABASE editoresymazmorras OWNER TO postgres;
@@ -205,6 +209,23 @@ CREATE TABLE public.usuario (
 ALTER TABLE public.usuario OWNER TO postgres;
 
 --
+-- TOC entry 226 (class 1259 OID 16530)
+-- Name: voto; Type: TABLE; Schema: public; Owner: minitienda
+--
+-- Añadido a mano: el dump original es anterior a la funcionalidad de votos.
+-- Un voto (+1/-1) por usuario y mazmorra; PK (mazmorra, usuario) impide votar dos veces.
+--
+
+CREATE TABLE public.voto (
+    mazmorra bigint NOT NULL,
+    usuario uuid NOT NULL,
+    valor smallint NOT NULL
+);
+
+
+ALTER TABLE public.voto OWNER TO minitienda;
+
+--
 -- TOC entry 4874 (class 2604 OID 16510)
 -- Name: cofre mazmorra; Type: DEFAULT; Schema: public; Owner: minitienda
 --
@@ -348,6 +369,42 @@ ALTER TABLE ONLY public.cofre
 
 ALTER TABLE ONLY public.elementomazmorra
     ADD CONSTRAINT mazmorra FOREIGN KEY (mazmorra) REFERENCES public.mazmorra(id) NOT VALID;
+
+
+--
+-- TOC entry 4886 (class 2606 OID 16535)
+-- Name: voto voto_pkey; Type: CONSTRAINT; Schema: public; Owner: minitienda
+--
+
+ALTER TABLE ONLY public.voto
+    ADD CONSTRAINT voto_pkey PRIMARY KEY (mazmorra, usuario);
+
+
+--
+-- TOC entry 4887 (class 2606 OID 16536)
+-- Name: voto voto_valor_check; Type: CONSTRAINT; Schema: public; Owner: minitienda
+--
+
+ALTER TABLE ONLY public.voto
+    ADD CONSTRAINT voto_valor_check CHECK (valor IN (1, -1));
+
+
+--
+-- TOC entry 4888 (class 2606 OID 16537)
+-- Name: voto voto_mazmorra_fk; Type: FK CONSTRAINT; Schema: public; Owner: minitienda
+--
+
+ALTER TABLE ONLY public.voto
+    ADD CONSTRAINT voto_mazmorra_fk FOREIGN KEY (mazmorra) REFERENCES public.mazmorra(id) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 4889 (class 2606 OID 16538)
+-- Name: voto voto_usuario_fk; Type: FK CONSTRAINT; Schema: public; Owner: minitienda
+--
+
+ALTER TABLE ONLY public.voto
+    ADD CONSTRAINT voto_usuario_fk FOREIGN KEY (usuario) REFERENCES public.usuario(id) ON DELETE CASCADE;
 
 
 -- Completed on 2026-10-07 10:28:14
