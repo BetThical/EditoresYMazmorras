@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import usc.etse.editoresymazmorras.model.Usuario;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
+    void removeById(UUID id);
 }

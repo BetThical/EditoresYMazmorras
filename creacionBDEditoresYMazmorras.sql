@@ -236,7 +236,6 @@ CREATE TABLE public.voto (
     valor smallint NOT NULL
 );
 
-
 ALTER TABLE public.voto OWNER TO minitienda;
 
 --
@@ -426,6 +425,80 @@ ALTER TABLE ONLY public.voto
 --
 -- PostgreSQL database dump complete
 --
+
+CREATE TABLE public.juego (
+    id bigint NOT NULL,
+);
+
+ALTER TABLE public.juego OWNER TO minitienda;
+
+ALTER TABLE ONLY public.juego
+    ADD CONSTRAINT juego_pkey PRIMARY KEY (id);
+
+CREATE SEQUENCE public.juego_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.juego_id_seq OWNER TO minitienda;
+
+ALTER SEQUENCE public.juego_id_seq OWNED BY public.juego.id;
+
+CREATE TABLE public.jugador (
+    usuario uuid NOT NULL,
+    juego bigint NOT NULL,
+    salud integer NOT NULL,
+);
+
+ALTER TABLE public.jugador OWNER TO minitienda;
+
+ALTER TABLE ONLY public.jugador
+    ADD CONSTRAINT jugador_usuario_fk FOREIGN KEY (usuario) REFERENCES public.usuario(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.jugador
+    ADD CONSTRAINT jugador_juego_fk FOREIGN KEY (juego) REFERENCES public.juego(id) ON DELETE CASCADE;
+
+CREATE TABLE public.elementojuego (
+    id bigint NOT NULL,
+    juego bigint NOT NULL,
+    posx integer NOT NULL,
+    posy integer NOT NULL,
+    planta integer NOT NULL,
+    tipo character varying(64) NOT NULL
+);
+
+ALTER TABLE public.elementojuego OWNER TO minitienda;
+
+ALTER TABLE ONLY public.elementojuego
+    ADD CONSTRAINT elementojuego_pkey PRIMARY KEY (id);
+
+CREATE SEQUENCE public.elementojuego_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.elementojuego_id_seq OWNER TO minitienda;
+
+ALTER SEQUENCE public.elementojuego_id_seq OWNED BY public.juego.id;
+
+ALTER TABLE ONLY public.elementojuego
+    ADD CONSTRAINT elementojuego_juego_fk FOREIGN KEY (juego) REFERENCES public.juego(id) ON DELETE CASCADE;
+
+CREATE TABLE public.cofrejuego (
+    elementojuego bigint NOT NULL,
+    objetos character varying(64)[] NOT NULL
+);
+
+ALTER TABLE public.cofrejuego OWNER TO minitienda;
+
+ALTER TABLE ONLY public.cofrejuego
+    ADD CONSTRAINT cofrejuego_elementojuego_fk FOREIGN KEY (elementojuego) REFERENCES public.elementojuego(id) ON DELETE CASCADE;
 
 \unrestrict hbIjBUe6MFmlIwkMCGLPtTnXw1oATZ0NSRtaxMXMRxvnqnwpCAWNG6dmXOGG8kZ
 

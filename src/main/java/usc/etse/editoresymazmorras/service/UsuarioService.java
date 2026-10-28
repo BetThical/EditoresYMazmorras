@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import usc.etse.editoresymazmorras.dto.CrearUsuarioDTO;
 import usc.etse.editoresymazmorras.dto.UsuarioDTO;
 import usc.etse.editoresymazmorras.exception.NoAutenticadoException;
+import usc.etse.editoresymazmorras.exception.NoEncontradoException;
 import usc.etse.editoresymazmorras.exception.PeticionInvalidaException;
 import usc.etse.editoresymazmorras.model.Usuario;
 import usc.etse.editoresymazmorras.repository.UsuarioRepository;
@@ -46,5 +47,12 @@ public class UsuarioService {
             throw new NoAutenticadoException("Usuario no autenticado");
         }
         return usuarioId;
+    }
+
+    public void eliminarUsuario(UUID usuarioId) throws NoEncontradoException {
+        if(!usuarios.existsById(usuarioId)){
+            throw new NoEncontradoException("No se encontró el usuario a eliminar.");
+        }
+        usuarios.removeById(usuarioId);
     }
 }
