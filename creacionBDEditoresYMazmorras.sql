@@ -21,6 +21,20 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- Rol dueño de las tablas: el dump original lo da por hecho pero no lo crea,
+-- así que en una máquina limpia fallaban todos los ALTER ... OWNER TO minitienda.
+-- Se crea solo si no existe (idempotente).
+--
+
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'minitienda') THEN
+        CREATE ROLE minitienda LOGIN;
+    END IF;
+END
+$$;
+
 DROP DATABASE IF EXISTS editoresymazmorras;
 --
 -- TOC entry 5045 (class 1262 OID 16460)
@@ -57,7 +71,7 @@ SET row_security = off;
 -- Name: public; Type: SCHEMA; Schema: -; Owner: pg_database_owner
 --
 
-CREATE SCHEMA public;
+CREATE SCHEMA IF NOT EXISTS public;
 
 
 ALTER SCHEMA public OWNER TO pg_database_owner;
